@@ -81,12 +81,6 @@ $aProductos[] = array(
                             
                         };
                         echo ($subtotal);
-                        // echo ($aProductos[0]["precio"] + $aProductos[1]["precio"] + $aProductos[2]["precio"]);
-
-                        /*for($i=0; $i<3; $i++){
-                        echo ($aProductos[$i]["precio"]);
-                        
-                        }; */
                     ?>
                     </h2>
                 </div>

@@ -7,7 +7,7 @@
 
 // Luego sobre el mismo listado modificarlo para que sólo muestre numeros pares
 
-/* for ($i=0; $i<=100; $i+=2){
+/* for ($i=2; $i<=100; $i+=2){
     print_r("$i <br>");
 } */
 
