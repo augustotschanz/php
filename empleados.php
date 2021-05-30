@@ -36,6 +36,9 @@
         "nombre" => "Victoria Luz",
         "bruto" => 70000
     );
+    function calcularNeto($bruto){
+        $neto = $bruto - ($bruto * 0.17);
+        return $neto;}
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +54,7 @@
     <h1 class="text-center py-3">Listado de empleados</h1>
     <div class="container">
         <table class="table table-hover border">
-            <tbody>
+            <tbody class="text-center">
                 <tr>
                     <th>DNI</th>
                     <th>Nombre</th>
@@ -59,20 +62,13 @@
                     <th>Sueldo neto($)</th>
                 </tr>
                 <?php foreach ($aEmpleados as $empleado) {?>
-
                 <tr>
                     <td><?php echo $empleado["dni"]; ?></td>
-                    <td><?php echo $empleado["nombre"]; ?></td>
-                    <td><?php echo $empleado["bruto"]; ?></td>
-                <?php }?>
-                
-                <?php function calcularNeto($bruto){
-                    $neto = $bruto - ($bruto * 0.17);
-                    return $neto; ?>
-                    <td><?php echo calcularNeto($aEmpleados["bruto"]); ?></td>
-                    <?php}?>
+                    <td><?php echo strtoupper($empleado["nombre"]); ?></td>
+                    <td>$ <?php echo number_format($empleado["bruto"], 2 , "," , "." ); ?></td>
+                    <td>$ <?php echo number_format(calcularNeto($empleado["bruto"]), 2 , ",", "."); ?></td>
+                    <?php }?>
                 </tr>
-                
             </tbody>
         </table>
     </div>

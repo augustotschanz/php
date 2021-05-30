@@ -26,12 +26,16 @@
         "bruto" => 70000
     );
 
-    $sueldoBruto = $aEmpleados["bruto"];
-
     function calcularNeto($bruto){
     $neto = $bruto - ($bruto * 0.17);
     return $neto; 
     
     }
-    echo calcularNeto($sueldoBruto);
+    echo calcularNeto($aEmpleados[0]["bruto"]);
 ?>
+
+<?php function calcularNeto($bruto){
+                        $neto = $bruto - ($bruto * 0.17);
+                        return $neto;
+                    ?>
+                    <td><?php echo calcularNeto($aEmpleados[0]["bruto"]); ?></td>
