@@ -36,9 +36,11 @@
         "nombre" => "Victoria Luz",
         "bruto" => 70000
     );
+
     function calcularNeto($bruto){
         $neto = $bruto - ($bruto * 0.17);
-        return $neto;}
+        return $neto;
+    }
 ?>
 
 <!DOCTYPE html>
@@ -58,13 +60,13 @@
                 <tr>
                     <th>DNI</th>
                     <th>Nombre</th>
-                    <th>Sueldo bruto($)</th>
-                    <th>Sueldo neto($)</th>
+                    <th>Sueldo bruto</th>
+                    <th>Sueldo neto</th>
                 </tr>
                 <?php foreach ($aEmpleados as $empleado) {?>
                 <tr>
                     <td><?php echo $empleado["dni"]; ?></td>
-                    <td><?php echo strtoupper($empleado["nombre"]); ?></td>
+                    <td><?php echo mb_strtoupper($empleado["nombre"]); ?></td>
                     <td>$ <?php echo number_format($empleado["bruto"], 2 , "," , "." ); ?></td>
                     <td>$ <?php echo number_format(calcularNeto($empleado["bruto"]), 2 , ",", "."); ?></td>
                     <?php }?>
