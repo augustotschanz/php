@@ -11,3 +11,15 @@
     border-radius: 50%;
     padding: 8px;
 }
+
+.fa-plus{
+    position: fixed;
+    padding: 6px 8px;
+    border-radius: 50%;
+    font-size: 30px;
+    border: 1px solid #001aff;
+    background-color: #001aff;
+    color: white;
+    bottom: 30px;
+    right: 40px;
+}
