@@ -1,51 +1,33 @@
-
 <?php
-
 include_once "config.php";
 include_once "entidades/cliente.php";
-include_once "entidades/provincia.entidad.php";
-include_once "entidades/localidad.entidad.php";
 
 $pg = "Edición de cliente";
 
 $cliente = new Cliente();
 $cliente->cargarFormulario($_REQUEST);
 
+if ($_POST) {
 
-if($_POST){
-
-    if(isset($_POST["btnGuardar"])){
-        if(isset($_GET["id"]) && $_GET["id"] > 0){
-              //Actualizo un cliente existente
-              $cliente->actualizar();
+    if (isset($_POST["btnGuardar"])) {
+        if (isset($_GET["id"]) && $_GET["id"] > 0) {
+            //Actualizo un cliente existente
+            $cliente->actualizar();
         } else {
             //Es nuevo
             $cliente->insertar();
         }
-
-    } else if(isset($_POST["btnBorrar"])){
+    } else if (isset($_POST["btnBorrar"])) {
         $cliente->eliminar();
-        header("Location: clientes.php");
+        header("Location: clientes-listado.php");
     }
-} 
+}
 
-if(isset($_GET["do"]) && $_GET["do"] == "buscarLocalidad" && $_GET["id"] && $_GET["id"] > 0){
-    $idProvincia = $_GET["id"];
-    $localidad = new Localidad();
-    $aLocalidad = $localidad->obtenerPorProvincia($idProvincia);
-    echo json_encode($aLocalidad);
-    exit;
-} else if(isset($_GET["id"]) && $_GET["id"] > 0){
+if (isset($_GET["id"]) && $_GET["id"] > 0) {
     $cliente->obtenerPorId();
 }
 
-
-
-$provincia = new Provincia();
-$aProvincias = $provincia->obtenerTodos();
-
-
-include_once("header.php"); 
+include_once "header.php";
 ?>
         <!-- Begin Page Content -->
         <div class="container-fluid">
@@ -81,151 +63,88 @@ include_once("header.php");
                     <label for="txtFechaNac" class="d-block">Fecha de nacimiento:</label>
                     <select class="form-control d-inline"  name="txtDiaNac" id="txtDiaNac" style="width: 80px">
                         <option selected="" disabled="">DD</option>
-                        <?php for($i=1; $i <= 31; $i++): ?>
-                            <?php if($cliente->fecha_nac != "" && $i == date_format(date_create($cliente->fecha_nac), "d")): ?>
+                        <?php for ($i = 1; $i <= 31; $i++): ?>
+                            <?php if ($cliente->fecha_nac != "" && $i == date_format(date_create($cliente->fecha_nac), "d")): ?>
                             <option selected><?php echo $i; ?></option>
                             <?php else: ?>
                             <option><?php echo $i; ?></option>
-                            <?php endif; ?>
-                        <?php endfor; ?>
+                            <?php endif;?>
+                        <?php endfor;?>
                     </select>
                     <select class="form-control d-inline"  name="txtMesNac" id="txtMesNac" style="width: 80px">
                         <option selected="" disabled="">MM</option>
-                        <?php for($i=1; $i <= 12; $i++): ?>
-                            <?php if($cliente->fecha_nac != "" && $i == date_format(date_create($cliente->fecha_nac), "m")): ?>
+                        <?php for ($i = 1; $i <= 12; $i++): ?>
+                            <?php if ($cliente->fecha_nac != "" && $i == date_format(date_create($cliente->fecha_nac), "m")): ?>
                             <option selected><?php echo $i; ?></option>
                             <?php else: ?>
                             <option><?php echo $i; ?></option>
-                            <?php endif; ?>
-                        <?php endfor; ?>
+                            <?php endif;?>
+                        <?php endfor;?>
                     </select>
                     <select class="form-control d-inline"  name="txtAnioNac" id="txtAnioNac" style="width: 100px">
                         <option selected="" disabled="">YYYY</option>
-                        <?php for($i=1900; $i <= date("Y"); $i++): ?>
-                         <?php if($cliente->fecha_nac != "" && $i == date_format(date_create($cliente->fecha_nac), "Y")): ?>
+                        <?php for ($i = 1900; $i <= date("Y"); $i++): ?>
+                         <?php if ($cliente->fecha_nac != "" && $i == date_format(date_create($cliente->fecha_nac), "Y")): ?>
                             <option selected><?php echo $i; ?></option>
                             <?php else: ?>
                             <option><?php echo $i; ?></option>
-                            <?php endif; ?>
-                        <?php endfor; ?> ?>
+                            <?php endif;?>
+                        <?php endfor;?> ?>
                     </select>
                 </div>
             </div>
+            <div class="col-12">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fa fa-table"></i> Domicilios
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-6 form-group">
+                            <label for="txtTelefono">Provincia:</label>
+                            <select class="form-control" name="lstProvincia" id="lstProvincia">
+                        </div>
+                        <div class="col-6 form-group">
+                            <label for="txtTelefono">Localidad:</label>
+                            <select class="form-control" name="lstLocalidad" id="lstLocalidad">
+                        </div>
+                        <div class="col-12 form-group">
+                            <label for="txtTelefono">Dirección:</label>
+                            <input type="text" class="form-control" name="txtDireccion" id="txtDireccion" value="<?php echo $cliente->direccion ?>">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-
-
-<div class="modal fade" id="modalDomicilio" tabindex="-1" role="dialog" aria-labelledby="modalDomicilioLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalDomicilioLabel">Domicilio</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      <div class="row">
-            <div class="col-12 form-group">
-                <label for="lstTipo">Tipo:</label>
-                <select name="lstTipo" id="lstTipo" class="form-control">
-                    <option value="" disabled selected>Seleccionar</option>
-                    <option value="1">Personal</option>
-                    <option value="2">Laboral</option>
-                    <option value="3">Comercial</option>
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 form-group">
-                <label for="lstProvincia">Provincia:</label>
-                <select name="lstProvincia" id="lstProvincia" onchange="fBuscarLocalidad();" class="form-control">
-                    <option value="" disabled selected>Seleccionar</option>
-                    <?php foreach($aProvincias as $prov): ?>
-                        <option value="<?php echo $prov->idprovincia; ?>"><?php echo $prov->nombre; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 form-group">
-                <label for="lstLocalidad">Localidad:</label>
-                <select name="lstLocalidad" id="lstLocalidad" class="form-control">
-                    <option value="" disabled selected>Seleccionar</option>
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 form-group">
-                <label for="txtDireccion">Dirección:</label>
-                <input type="text" name="" id="txtDireccion" class="form-control">
-            </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" onclick="fAgregarDomicilio()">Agregar</button>
-      </div>
-    </div>
-  </div>
-</div>
         </div>
         <!-- /.container-fluid -->
 
       </div>
       <!-- End of Main Content -->
 <script>
-$(document).ready( function () {
-    var idCliente = '<?php echo isset($cliente) && $cliente->idcliente > 0? $cliente->idcliente : 0 ?>';
 
-   var dataTable = $('#grilla').DataTable({
-        "processing": true,
-        "serverSide": false,
-        "bFilter": false,
-        "bInfo": true,
-        "bSearchable": false,
-        "paging": false,
-        "pageLength": 25,
-        "order": [[ 0, "asc" ]],
-        "ajax": "cliente-formulario.php?do=cargarGrilla&idCliente=" + idCliente
+window.onload = function () {
+
+    $("#txtCantidad").change(function() {
+        let total = $("#txtPrecioUni").val() * $("#txtCantidad").val()
+        $("#txtTotal").val(total);
     });
-} );
 
- function fBuscarLocalidad(){
-            idProvincia = $("#lstProvincia option:selected").val();
-            $.ajax({
-                type: "GET",
-                url: "cliente-formulario.php?do=buscarLocalidad",
-                data: { id:idProvincia },
-                async: true,
-                dataType: "json",
-                success: function (respuesta) {
-                  let opciones = "<option value='0' disabled selected>Seleccionar</option>";
-                  const resultado = respuesta.reduce(function(acumulador, valor){
-                        const {nombre,idlocalidad} = valor;
-                        return acumulador + `<option value="${idlocalidad}">${nombre}</option>`;
-                  }, opciones);
-                  $("#lstLocalidad").empty().append(resultado);
-                }
-            });
-        }
+    $("#lstProducto").change(function(){
+        idProducto = $("#lstProducto option:selected").val();
+         $.ajax({
+            type: "GET",
+            url: "venta-formulario.php?do=buscarProducto",
+            data: { id:idProducto },
+            async: true,
+            dataType: "json",
+            success: function (respuesta) {
+                strResultado = Intl.NumberFormat("es-AR", {style: 'currency', currency: 'ARS'}).format(respuesta.precio);
+                $("#txtPrecioUniCurrency").val(strResultado);
+                $("#txtPrecioUni").val(respuesta.precio);
+            }
+        });
+    });
+};
 
-        function fAgregarDomicilio(){
-            var grilla = $('#grilla').DataTable();
-            grilla.row.add([
-                $("#lstTipo option:selected").text() + "<input type='hidden' name='txtTipo[]' value='"+ $("#lstTipo option:selected").val() +"'>",
-                $("#lstProvincia option:selected").text() + "<input type='hidden' name='txtProvincia[]' value='"+ $("#lstProvincia option:selected").val() +"'>",
-                $("#lstLocalidad option:selected").text() + "<input type='hidden' name='txtLocalidad[]' value='"+ $("#lstLocalidad option:selected").val() +"'>",
-                $("#txtDireccion").val() + "<input type='hidden' name='txtDomicilio[]' value='"+$("#txtDireccion").val()+"'>"
-            ]).draw();
-            $('#modalDomicilio').modal('toggle');
-            limpiarFormulario();
-        }
-
-        function limpiarFormulario(){
-            $("#lstTipo").val("");
-            $("#lstProvincia").val("");
-            $("#lstLocalidad").val("");
-            $("#txtDireccion").val("");
-        }
 </script>
-<?php include_once("footer.php"); ?>
+<?php include_once "footer.php";?>

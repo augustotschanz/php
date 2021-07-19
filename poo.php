@@ -10,6 +10,8 @@ class Persona{
     protected $edad;
     protected $nacionalidad;
 
+    public function
+
     public function setDni($dni){ $this->dni = $dni;}
     public function getDni(){ return $this->dni;}
 

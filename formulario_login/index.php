@@ -25,7 +25,7 @@
         <div class="container">
             <div class="row">
                 <?php if(isset($mensaje) && $mensaje != ""){
-                    echo '<div class="alert alert-danger" role="alert">' . $mensaje . "</div>"}
+                    echo '<div class="alert alert-danger" role="alert">' . $mensaje . "</div>";}
                 ?>
                 <form action="" method="POST" class="col-3 py-4">
                     <h4>Usuario:</h4>
